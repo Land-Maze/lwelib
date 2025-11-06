@@ -35,3 +35,17 @@ target_include_directories(imgui_lib PUBLIC
 		${imgui_SOURCE_DIR}/backends
 )
 target_link_libraries(imgui_lib PUBLIC glfw)
+
+# ---------------------------------------------------------------------------
+# WebGPU (static link)
+# Thanks to the Élie Michel
+# ---------------------------------------------------------------------------
+
+if (NOT TARGET webgpu)
+		FetchContent_Declare(
+				webgpu-backend-wgpu-static
+				GIT_REPOSITORY https://github.com/eliemichel/WebGPU-distribution
+				GIT_TAG wgpu-static-v0.19.4.1
+		)
+		FetchContent_MakeAvailable(webgpu-backend-wgpu-static)
+endif()

@@ -23,3 +23,16 @@ add_subdirectory(crypto)
 add_subdirectory(gfx)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE core crypto gfx)
+
+if (MSVC)
+	target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+else()
+	target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
+endif()
+
+if (XCODE)
+	set_target_properties(App PROPERTIES
+			XCODE_GENERATE_SCHEME ON
+			XCODE_SCHEME_ENABLE_GPU_FRAME_CAPTURE_MODE "Metal"
+	)
+endif()
