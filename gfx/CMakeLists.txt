@@ -8,4 +8,4 @@ target_include_directories(gfx PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(gfx PUBLIC glad glfw)
+target_link_libraries(gfx PUBLIC glad glfw glm)
