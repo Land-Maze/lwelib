@@ -1,0 +1,33 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, amstext, amsthm}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage{svg}
+\usepackage{amsopn}
+\usepackage[backend=biber, style=numeric]{biblatex}
+\addbibresource{references.bib}
+\graphicspath{{figures/}}
+
+\title{Module-LWE Fast Implementation for Post-Quantum Cryptography}
+\author{Timur Dzhesur}
+
+\begin{document}
+
+    \maketitle
+    \newpage
+
+    \tableofcontents
+    \newpage
+
+    \include{chapters/introduction}
+    \include{chapters/theoretical_background}
+    \include{chapters/chosen_methods}
+    \include{chapters/implementation}
+    \include{chapters/performance_evaluation}
+    \include{chapters/conclusion}
+
+    \printbibliography
+\end{document}

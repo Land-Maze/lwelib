@@ -1,0 +1,249 @@
+% FIXME: Restructurize sections
+% FIXME: Remake it
+
+
+
+
+\chapter{Theoretical Background}
+\label{ch:theoretical_background}
+
+
+\section{Cryptography Fundamentals}
+\label{sec:cryptography_fundamentals}
+
+The primary objective of modern cryptography is to ensure confidentiality, integrity, and authenticity (so-called CIA triad) in the presence of adversaries.
+Public-key cryptography (PKC) relies on mathematical functions that are easy to compute in one direction but computationally infeasible to invert without a specific private key.
+
+Current industry standards, such as RSA and Elliptic Curve Cryptography (ECC), base their security on the Integer Factorization Problem and the Discrete Logarithm Problem (DLP).
+These schemes have withstood classical cryptanalysis for decades.
+However, they share a common vulnerability: they are susceptible to efficient solutions via quantum algorithms.
+
+\subsection{P vs NP Problem}
+\label{subsec:p_vs_np_problem}
+
+The P vs NP problem is a major unsolved problem in theoretical computer science that questions whether every problem whose solution can be quickly verified can also be quickly solved.
+This distinction is fundamental to the existence of modern cryptography.
+
+\begin{itemize}
+    \item \textbf{Class P (Polynomial Time):} Problems that can be solved by a classical computer in a number of steps defined by a polynomial function of the input size $n$ (e.g., $O(n^2)$). These are considered "easy" or tractable.
+    \item \textbf{Class NP (Nondeterministic Polynomial Time):} Problems where a provided solution can be \textit{verified} in polynomial time.
+    \item \textbf{NP-Hard and NP-Complete:} The \textit{hardest} problems in NP. If an efficient solution were found for an NP-complete problem, it would imply that P = NP\@.
+\end{itemize}
+The consensus among computer scientists is that P $\neq$ NP, meaning there exist problems that are easy to verify but hard to solve.
+There is 1 million USD prize for anyone who can prove or disprove P = NP\@ by the Clay Mathematics Institute. % \cite{millennium_prize_problems}
+
+\subsubsection{Implications for Cryptography}
+Cryptography relies on the existence of \textbf{One-Way Functions (OWF)}: functions that are easy to compute (in P) but hard to invert (in NP). If it were proven that P = NP, then for any public key $pk$ and ciphertext $c$, a computer could efficiently find the secret key $sk$ or the plaintext $m$, effectively making all cryptography impossible.
+
+\subsubsection{Lattices and the NP-Hardness}
+Most current public-key systems (like RSA) rely on problems (Factoring) that are in NP but are \textit{not} believed to be NP-hard.
+This is a vulnerability, as a \textit{shortcut} like Shor's algorithm can move them into a solvable class.
+
+Lattice-based cryptography is distinct because many of its underlying problems, such as the Shortest Vector Problem (SVP) in its exact form, are proven to be **NP-hard**.
+While M-LWE relies on an average-case approximation of these problems rather than the worst-case NP-hard version, the connection to NP-hardness provides a much stronger security foundation.
+This \textit{hardness} is what makes M-LWE a robust candidate for Post-Quantum Cryptography.
+
+
+
+\section{Quantum Computing and Cryptography}
+\label{sec:quantum_computing_and_cryptography}
+
+Quantum computing introduces a new paradigm of computation utilizing the principles of superposition and entanglement.
+While classical computers operate on bits (0 or 1), quantum computers operate on qubits.
+
+\subsection{Quantum Computing Basics}
+\label{subsec:quantum_computing_basics}
+
+\subsubsection{Qubits}
+\label{subsubsec:qubits}
+Qubits are units of quantum information that contain two basis states, typically denoted as $|0\rangle$ and $|1\rangle$.
+Before measurement, is a probabilistic combination of both states, represented as:
+\[    |\psi\rangle = \alpha|0\rangle + \beta|1\rangle \]
+where $\alpha$ and $\beta$ are complex numbers satisfying $|\alpha|^2 + |\beta|^2 = 1$.
+After measurement, the qubit collapses to either $|0\rangle$ with probability $|\alpha|^2$ or $|1\rangle$ with probability $|\beta|^2$.
+
+The most common way to visualize qubits is the Bloch sphere (which is also called Riemann sphere), where any point on the sphere represents a possible state of a qubit.
+
+\begin{figure}[htbp]
+    \label{fig:bloch_sphere_visualisation}
+    \centering
+    \includesvg[width=0.4\textwidth]{bloch_sphere.svg} % FIXME: Do I need to center this?
+    \caption{Bloch Sphere Visualisation. \newline[Source: Bloch sphere (https://en.wikipedia.org/wiki/Bloch\_sphere). 12.11.2025]}
+\end{figure}
+
+Because of superposition, a quantum computer with $n$ qubits can represent $2^n$ states simultaneously.
+Why does qubit must satisfy $|\alpha|^2 + |\beta|^2 = 1$?
+This is because the total probability of all possible outcomes must equal 1, ensuring a valid probability distribution; You can think of it as a normalization.
+Quantum algorithms exploit this property to perform computations.
+
+\subsubsection{Quantum Gates}
+\label{subsubsec:quantum_gates}
+Quantum gates manipulate qubits through unitary transformations, preserving the total probability.
+Common single-qubit gates include:
+\begin{itemize}
+    \item \textbf{Hadamard Gate (H):} Creates superposition by transforming $|0\rangle$ to $\frac{1}{\sqrt{2}}(|0
+    \rangle + |1\rangle)$ and $|1\rangle$ to $\frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)$.
+    \item \textbf{Pauli-X Gate:} Acts as a quantum NOT gate, flipping $|0\rangle$ to $|1\rangle$ and vice versa.
+    \item \textbf{CNOT Gate:} A two-qubit gate that flips the target qubit if the control qubit is $|1\rangle$.
+\end{itemize}
+These gates can be combined to form complex quantum circuits that perform specific algorithms.
+
+\subsubsection{Quantum Computing Explanation}
+\label{subsubsec:quantum_computing_explanation}
+Quantum computing leverages superposition and entanglement to perform parallel computations.
+By encoding information into a superposition of states, a quantum system can, in a sense, process a vast mathematical space simultaneously.
+However, the true power of a quantum algorithm lies not in mere parallelization, but in \textit{quantum interference}.
+
+
+
+Quantum algorithms are specifically designed to manipulate the probability amplitudes ($\alpha$ and $\beta$) of the qubits.
+Through a sequence of unitary gates, the algorithm causes the amplitudes of incorrect solutions to interfere destructively (canceling each other out), while the amplitude of the correct solution interferes constructively (amplifying).
+Consequently, when a measurement is performed at the end of a circuit, the system is highly likely to collapse into the state representing the correct answer.
+
+This mechanism allows quantum computers to solve specific classes of problems—such as period finding—exponentially faster than the best-known classical algorithms.
+It is a common misconception that quantum computers can solve \textit{all} problems faster than classical computers; they are primarily effective for problems with specific mathematical structures that quantum interference can exploit, such as integer factorization via Shor’s algorithm or unstructured search via Grover’s algorithm.
+
+I will not go into more depth about the physics of quantum computing, as the underlying mechanics far exceed the scope of this thesis.
+
+\subsection{Shor's Algorithm}
+\label{subsec:shors-algorithm}
+Peter Shor introduced a quantum algorithm that can solve the Integer Factorization and Discrete Logarithm problems in polynomial time.
+For an RSA key of length $n$, classical sieving algorithms require sub-exponential time, whereas Shor's algorithm requires $O(n^2 (\log n) (\log \log n))$ quantum gates.
+This effectively breaks RSA and ECC, necessitating the transition to Post-Quantum Cryptography (PQC). %\cite{shor1994quantum}
+While it is theoretically possible to build a quantum computer capable of running Shor's algorithm for practical key sizes, current technology is not yet sufficient.
+Even Peter Shor himself has understood that quantum noise and decoherence would destroy the quantum state before the algorithm could complete.
+So he proposed quantum error correction code (Shor 9-qubit code) in 1995 to provide that error correction was possible at all.
+However, the overhead for error correction is substantial, requiring many physical qubits to represent a single logical qubit.
+Estimates suggest that breaking a 2048-bit RSA key would require millions of physical qubits, far beyond current capabilities.
+
+\subsection{Grover's Algorithm}
+\label{subsec:grovers-algorithm}
+Grover's algorithm provides a quadratic speedup for searching unsorted databases.
+While less catastrophic than Shor's algorithm, it implies that symmetric primitives (like AES) and hash functions (like SHA-3) must double their key or output sizes to maintain equivalent security levels against quantum adversaries.
+Lattice-based cryptography is generally resistant to Grover's algorithm, requiring only modest parameter adjustments\cite{grover1996fast}.
+
+
+\section{Lattice-based Cryptography}
+\label{sec:lattice_based_cryptography}
+
+Lattice-based cryptography is a leading candidate for PQC standards.
+A lattice $\mathcal{L}$ is a discrete subgroup of $\mathbb{R}^n$, defined as the set of all integer linear combinations of linearly independent basis vectors $\mathbf{b}_1, \dots, \mathbf{b}_k \in \mathbb{R}^n$.
+\[
+    \mathcal{L}(\mathbf{B}) = \left\{ \sum_{i=1}^k z_i \mathbf{b}_i : z_i \in \mathbb{Z} \right\}
+\]
+
+\subsection{Hard Lattice Problems}
+\label{subsec:hard-lattice-problems}
+\begin{itemize}
+    \item \textbf{Shortest Vector Problem (SVP):} Given a basis for $\mathcal{L}$, find a non-zero lattice vector $\mathbf{v}$ such that $\|\mathbf{v}\|$ is minimized.
+    \item \textbf{Closest Vector Problem (CVP):} Given a basis for $\mathcal{L}$ and a target point $\mathbf{t} \in \mathbb{R}^n$, find the lattice point $\mathbf{v} \in \mathcal{L}$ closest to $\mathbf{t}$.
+\end{itemize}
+These problems are known to be NP-hard in their exact forms and remain computationally intensive to approximate, even for quantum computers.
+
+
+\section{Learning With Errors (LWE)}
+\label{sec:lwe}
+
+The Learning With Errors (LWE) problem allows constructing cryptographic primitives with security reductions to worst-case lattice problems.
+
+Let $n, m, q$ be integers and $\chi$ be an error distribution over $\mathbb{Z}_q$.
+The LWE search problem asks to recover a secret $\mathbf{s} \in \mathbb{Z}_q^n$ given a system of linear equations with noise:
+\[
+    A\mathbf{s} + \mathbf{e} = \mathbf{b} \pmod q
+\]
+where $A \leftarrow \mathbb{Z}_q^{m \times n}$ is uniform, and $\mathbf{e} \leftarrow \chi^m$ is a small error vector.
+Standard LWE is highly secure but inefficient.
+The public matrix $A$ requires $O(n^2)$ storage, leading to kilobyte-sized keys that are impractical for constrained devices.
+
+
+\section{Algebraic Structures for Efficiency}
+\label{sec:algebraic_structures}
+
+To address the efficiency limitations of LWE, we introduce structured variants defined over polynomial rings.
+
+\subsection{Polynomial Rings and Cyclotomics}
+\label{subsec:polynomial-rings-and-cyclotomics}
+We work over the ring $R_q = \mathbb{Z}_q[X] / \langle \Phi(X) \rangle$, where $\Phi(X)$ is a cyclotomic polynomial.
+For efficiency, schemes like Kyber use the $2d$-th cyclotomic polynomial $\Phi(X) = X^d + 1$ where $d$ is a power of 2 (typically $d=256$).
+This structure allows us to represent cryptographic keys as polynomials rather than large matrices, reducing storage requirements significantly.
+
+
+\section{Module-LWE (M-LWE)}
+\label{sec:m_lwe}
+
+Module-LWE (M-LWE) unifies the security of standard LWE with the efficiency of Ring-LWE. In M-LWE, elements are vectors (modules) of rank $k$ over the ring $R_q$.
+
+\subsection{Problem Definition}
+\label{subsec:problem-definition}
+Let $\mathbf{s} \in R_q^k$ be the secret.
+Given a public matrix $A \in R_q^{k \times k}$ and error $\mathbf{e} \in R_q^k$, the M-LWE equation is:
+\[
+    \mathbf{b} = A\mathbf{s} + \mathbf{e} \in R_q^k
+\]
+The security relies on the hardness of finding $\mathbf{s}$ given $(A, \mathbf{b})$.
+The parameter $k$ allows tuning security without changing the underlying ring arithmetic.
+For example, Kyber-512 uses $k=2$, while Kyber-768 uses $k=3$.
+
+
+\section{Number Theoretic Transform (NTT)}
+\label{sec:ntt}
+
+Number Theoretic Transform (NTT) is the primary algorithmic driver for the \textit{Fast Implementation} of M-LWE\@.
+It is a generalization of the Fast Fourier Transform (FFT) over finite fields.
+
+\subsection{Polynomial Multiplication Bottleneck}
+\label{subsec:polynomial-multiplication-bottleneck}
+In M-LWE, the core operation is polynomial multiplication in $R_q$.
+Using standard \textit{schoolbook} multiplication, computing $a(x) \cdot b(x)$ takes $O(d^2)$ operations.
+For $d=256$, this is computationally expensive.
+
+\subsection{NTT Definition}
+\label{subsec:ntt-definition}
+The NTT allows us to perform multiplication in $O(d \log d)$ time.
+If $q$ is a prime such that $q \equiv 1 \pmod{2d}$, there exists a primitive $2d$-th root of unity $\zeta \in \mathbb{Z}_q$.
+The NTT maps a polynomial $f(x) \in R_q$ to a vector of evaluation points:
+\[
+    \text{NTT}(f) = \hat{f} = (f(\zeta^1), f(\zeta^3), \dots, f(\zeta^{2d-1}))
+\]
+By transforming polynomials into the NTT domain, multiplication becomes a point-wise operation:
+\[
+    f(x) \cdot g(x) = \text{INTT}(\text{NTT}(f) \circ \text{NTT}(g))
+\]
+where $\circ$ denotes coefficient-wise multiplication and INTT is the inverse transform.
+
+\subsection{Negative Wrapped Convolution}
+\label{subsec:negative-wrapped-convolution}
+Because we work in the ring $\mathbb{Z}_q[X] / \langle X^d + 1 \rangle$, we use the negacyclic NTT\@.
+This avoids the need to pad polynomials with zeros (which would double the length) and allows for highly efficient, in-place implementations crucial for high-performance cryptography.
+
+
+\section{Limitations of Classical and Quantum Attacks}
+\label{sec:limitations_of_attacks}
+
+The parameters of M-LWE are chosen to resist known attacks.
+\begin{itemize}
+    \item Primal Attack: Attempts to find the short vector in the lattice constructed from the LWE samples.
+    \item The complexity depends on the Block-Korkine-Zolotarev (BKZ) reduction algorithm.
+    \item Dual Attack: Attempts to find a short vector in the dual lattice to distinguish the LWE samples from random noise.
+\end{itemize}
+Quantum algorithms like Grover's can speed up the sieving phase of BKZ, but the speedup is not exponential.
+Therefore, increasing the lattice dimension $n$ (via $k$) sufficiently compensates for the quantum threat.
+
+
+\section{Formulation of Thesis Goal and Tasks}
+\label{sec:thesis_goals}
+
+The goal of this thesis is to research and implement a high-performance Module-LWE scheme similar with the CRYSTALS Kyber specification.
+The specific tasks are:
+\begin{enumerate}
+    \item Analyze the algebraic structure of M-LWE and the specifics for Kyber parameters.
+    \item Implement the core arithmetic of the ring $R_q$, with a focus on a vectorized Number Theoretic Transform (NTT).
+    \item Develop the full key generation, encapsulation, and decapsulation mechanisms.
+    \item Evaluate the performance of the implementation using CPU cycle counters and compare against reference implementations.
+\end{enumerate}
+
+
+\section{Summary}
+\label{sec:summary_chapter_1}
+
+% FIXME: Summary for Chapter 1
