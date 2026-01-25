@@ -2,7 +2,7 @@
 \label{ch:theoretical_background}
 
 This chapter establishes the mathematical and computational foundations necessary for this thesis.
-We begin by defining the complexity classes that underpin modern cryptography, analyze the specific threats posed by quantum computing, and finally detail the lattice-based structures and algorithms-specifically Module-LWE and the Number Theoretic Transform-that enable secure and efficient post-quantum communication.
+We begin by defining the complexity classes that underpin modern cryptography, analyze the specific threats posed by quantum computing, and finally detail the lattice-based structures and algorithms-specifically Module-LWE and the Number Theoretic Transform that gives secure and efficient post-quantum communication.
 
 \section{Cryptography and Computational Hardness: P vs NP Problem}
 \label{sec:cryptography_fundamentals}
@@ -294,7 +294,7 @@ Once transformed, the multiplication of two polynomials $f$ and $g$ is simplifie
 
 This chapter established the theoretical framework for the thesis.
 We reviewed the computational hardness assumptions that underpin modern cryptography and analyzed why the P vs NP problem is central to security.
-We identified the existential threat posed by quantum algorithms-specifically Shor's and Grover's-and presented Lattice-based cryptography as the robust solution.
+We identified the existential threat posed by quantum algorithms, specifically Shor's and Grover's, and presented Lattice-based cryptography as the robust solution.
 We detailed the transition from standard LWE to Module-LWE, highlighting how the algebraic structure of polynomial rings offers superior efficiency.
 Finally, we introduced the Number Theoretic Transform (NTT) as the essential mathematical tool for optimizing these schemes.
 The following chapters will build upon these foundations to design, implement, and benchmark a high-speed M-LWE cryptographic library.
